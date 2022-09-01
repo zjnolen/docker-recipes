@@ -1,5 +1,5 @@
 FROM ubuntu:focal
-ARG vANGSD="0.937"
+ARG vANGSD="0.938"
 ARG vHTSlib="1.15.1"
 
 LABEL container.name "ANGSD"
@@ -51,29 +51,17 @@ RUN locale-gen en_US.utf8
 ENV LC_ALL en_US.UTF-8
 ENV LC_LANG en_US.UTF-8
 
-# Install htslib
-RUN cd /opt && \
-	wget https://github.com/samtools/htslib/releases/download/${vHTSlib}/htslib-${vHTSlib}.tar.bz2 && \
-	tar -xvf htslib-${vHTSlib}.tar.bz2 && \
-	rm htslib-${vHTSlib}.tar.bz2 && \
-	cd htslib-${vHTSlib} && \
-	autoconf && \
-	autoheader && \
-	./configure && \
-	make && \
-	make install && \
-	cd /opt && \
-	rm -r htslib-${vHTSlib}
-
 # Install angsd and create bin folder
 RUN cd /opt && \
-	wget https://github.com/ANGSD/angsd/archive/refs/tags/${vANGSD}.tar.gz && \
-	tar -xvf ${vANGSD}.tar.gz && \
-	rm ${vANGSD}.tar.gz && \
-	cd angsd-${vANGSD} && \
-	make HTSSRC=/usr/local/lib && \
+	wget https://github.com/ANGSD/angsd/releases/download/${vANGSD}/angsd${vANGSD}.tar.gz && \
+	tar xf angsd${vANGSD}.tar.gz && \
+	rm angsd${vANGSD}.tar.gz && \
+	cd htslib && \
+	make && \
+	cd ../angsd && \
+	make HTSSRC=../htslib && \
 	cp angsd /usr/local/bin/ && \
 	cd misc && \
 	cp $(find . -executable -type f) /usr/local/bin/ && \
 	cd /opt && \
-	rm -r angsd-${vANGSD}
+	rm -r angsd
