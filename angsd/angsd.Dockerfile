@@ -1,6 +1,6 @@
 FROM ubuntu:focal
-ARG vANGSD="0.936"
-ARG vHTSlib="1.14"
+ARG vANGSD="0.937"
+ARG vHTSlib="1.15.1"
 
 LABEL container.name "ANGSD"
 LABEL container.desc "ANGSD, a software for analyzing next generation sequencing data"
@@ -44,7 +44,6 @@ RUN apt-get update && \
 											   git \
 											   libcurl4-gnutls-dev \
 											   libssl-dev \
-											   gdb \
 	&& apt-get clean
 
 # set locales
