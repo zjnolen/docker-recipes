@@ -1,6 +1,6 @@
-FROM ubuntu:focal
-ARG vANGSD="0.938"
-ARG vHTSlib="1.15.1"
+FROM debian:bullseye
+ARG vANGSD="0.940"
+ARG vHTSlib="1.16"
 
 LABEL container.name "ANGSD"
 LABEL container.desc "ANGSD, a software for analyzing next generation sequencing data"
@@ -24,9 +24,6 @@ LABEL citation.doi.htslib "https://doi.org/10.1093/gigascience/giab007"
 
 # Use bash as shell
 SHELL ["/bin/bash", "-c"]
-
-# Set workdir
-WORKDIR /opt
 
 # Install necessary tools and dependencies
 RUN apt-get update && \
@@ -53,16 +50,16 @@ ENV LC_ALL en_US.UTF-8
 ENV LC_LANG en_US.UTF-8
 
 # Install angsd and create bin folder
-RUN cd /opt && \
-	wget https://github.com/ANGSD/angsd/releases/download/${vANGSD}/angsd${vANGSD}.tar.gz && \
+RUN wget https://github.com/ANGSD/angsd/releases/download/${vANGSD}/angsd${vANGSD}.tar.gz && \
 	tar xf angsd${vANGSD}.tar.gz && \
 	rm angsd${vANGSD}.tar.gz && \
 	cd htslib && \
 	make && \
 	cd ../angsd && \
+	git config --global --add safe.directory /angsd && \
 	make HTSSRC=../htslib && \
 	cp angsd /usr/local/bin/ && \
 	cd misc && \
 	cp $(find . -executable -type f) /usr/local/bin/ && \
-	cd /opt && \
+	cd ../../ && \
 	rm -r angsd
