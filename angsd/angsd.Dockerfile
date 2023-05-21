@@ -44,6 +44,7 @@ RUN apt-get update && \
 											   git \
 											   libcurl4-gnutls-dev \
 											   libssl-dev \
+											   bc \
 	&& apt-get clean
 
 # set locales
